@@ -51,7 +51,6 @@ public class WriteDataToFileByFileChannel {
 
     public static void main(String[] args) throws IOException {
 
-        // 1 个字节 = 8 位即 1 byte
         // 1024 * 1024 * 10 = 10M
         int fileSize = 1024 * 1024 * 10;
         WriteDataToFileByFileChannel writeDataToFileByFileChannel = new WriteDataToFileByFileChannel("./test.txt", fileSize);
