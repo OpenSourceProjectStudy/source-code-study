@@ -3,7 +3,13 @@ package io.github.lcn29.completable.future;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * TODO
+ * 不带 Async 方法
+ * 如果注册时被依赖的操作已经执行完成，则直接由当前线程执行
+ * 如果注册时被依赖的操作还未执行完，则由回调线程执行
+ *
+ * Async 方法
+ * 可以指定 Executor, 由里面对应的线程进行操作
+ * 不指定, 会使用 ForkJoinPool 的 commonPool() 线程池 (ForkJoinPool.commonPool() 默认线程数为 CPU 核数 -1, 如果 IO 密集型应用, 线程数可能会成为瓶颈)
  *
  * @author canxin.li
  * @date 2025-01-16 19:27:47
