@@ -1,7 +1,6 @@
 package io.github.lcn29.file.channel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
@@ -29,7 +28,48 @@ public class FileChannelTest {
 
     public static void main(String[] args) throws Exception {
         // fileChannelTest(RESOURCE_NAME);
-        mappedByteBufferTest(RESOURCE_NAME);
+        //mappedByteBufferTest(RESOURCE_NAME);
+        //a(RESOURCE_WRITE_NAME, 1024 * 1024 * 10);
+        writeByFileChannel();
+        writeByMappedByteBuffer();
+    }
+
+    private static void writeByFileChannel() throws Exception {
+
+        // 创建一个堆外缓冲区
+        byte[] bytes = "hello world".getBytes();
+        // ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+        buffer.put(bytes);
+        buffer.flip();
+
+        FileChannel fileChannel = new RandomAccessFile(new File("./test.txt"), "rw").getChannel();
+
+        // 写入数据
+        fileChannel.write(buffer);
+        // 强制刷新到磁盘
+        fileChannel.force(false);
+        fileChannel.close();
+    }
+
+    /**
+     * 通过 MappedByteBuffer 写入文件
+     */
+    private static void writeByMappedByteBuffer() throws IOException {
+
+        // 创建一个堆外缓冲区
+        byte[] bytes = "hello world".getBytes();
+        // ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+        buffer.put(bytes);
+        buffer.flip();
+
+        FileChannel fileChannel = new RandomAccessFile(new File("./test.txt"), "rw").getChannel();
+        MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, bytes.length);
+        mappedByteBuffer.put(buffer);
+        // 强制刷新到磁盘
+        mappedByteBuffer.force();
+        fileChannel.close();
     }
 
 
@@ -39,6 +79,7 @@ public class FileChannelTest {
         // 文件通道
         FileChannel fileChannel = new RandomAccessFile(file, "rw").getChannel();
         MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, fileSize);
+        System.out.println(mappedByteBuffer.getClass().toString());
     }
 
     /**
