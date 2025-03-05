@@ -19,6 +19,7 @@
 
     <modules>
         <module>rocket-mq</module>
+        <module>java-feature</module>
     </modules>
 
     <dependencyManagement>
